@@ -12,6 +12,7 @@ type Server struct {
 	IPVsersion string
 	IP         string
 	Port       int
+	Router     ziface.IRouter
 }
 
 func CallBackClient(conn *net.TCPConn, buf []byte, cnt int) error {
@@ -35,7 +36,7 @@ func (s *Server) Start() {
 		var cid uint32
 		for {
 			conn, _ := lister.AcceptTCP()
-			dealConn := NewConnection(conn, cid, CallBackClient)
+			dealConn := NewConnection(conn, cid, s.Router)
 			cid++
 			go dealConn.Start()
 			/*go func() {
@@ -65,6 +66,11 @@ func NewServer(name string) ziface.IServer {
 		IPVsersion: "tcp4",
 		IP:         "0.0.0.0",
 		Port:       8999,
+		Router:     nil,
 	}
 	return s
+}
+
+func (s *Server) AddRouter(router ziface.IRouter) {
+	s.Router = router
 }

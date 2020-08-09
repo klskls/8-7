@@ -1,14 +1,7 @@
 package ziface
 
-type Request struct {
-	conn IConnection
-	data []byte
-}
+type IRequest interface {
+	GetConnection() IConnection
 
-func (r *Request) GetConnection() IConnection {
-	return r.conn
-}
-
-func (r *Request) GetData() []byte {
-	return r.data
+	GetData() []byte
 }
